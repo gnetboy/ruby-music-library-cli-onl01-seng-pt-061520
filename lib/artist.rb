@@ -30,9 +30,7 @@ class Artist
     end
     def add_song(song)
         if song.artist==self
-        else
-            song.artist=self
-            @songs << song
+        self.songs << song
         end
     end
     def genres

@@ -2,6 +2,7 @@ require 'pry'
 
 class MusicLibraryController
     attr_accessor :path
+    attr_reader  :song,:artist,:genre
     extend Concerns::Findable
 
      def initialize(path='./db/mp3s')
@@ -46,7 +47,11 @@ class MusicLibraryController
         Song.all.sort{|x,y|x.name<=>y.name}.each.with_index do |song,index|
           puts "#{index+1}. #{song.artist.name} - #{song.name} - #{song.genre.name}"
          end
-      end
+    
+        songs_sorted=Song.all.sort_by do |song|
+          song.name
+        end
+      end 
 
       def list_artists
         Artist.all.sort{|a, b| a.name <=> b.name}.each_with_index do |artist, index|
@@ -59,15 +64,17 @@ class MusicLibraryController
           puts "#{index+1}. #{genre.name}"
         end
       end
+      
       def list_songs_by_artist
-         puts "Please enter the name of an artist:"
-         input= gets.strip 
-          if artist= Artist.find_by_name(input)
-            binding.pry
-          artist.songs.sort{|a, b| a.name <=> b.name}.each.with_index do |song,index|
-          puts "#{index+1}. #{a.name} - #{song.genre.name}"
-          
-          end
+        puts "Please enter the name of an artist:"
+        input=gets.strip
+        if Artist.find_by_name(input) 
+          artist=Artist.find_by_name(input)
+          songs=artist.songs.sort{|a,b|a.name<=>b.name}
+          songs.each_with_index do |song,i|
+
+          puts "#{i+1}. #{song.name} - #{song.genre.name}"
+         end
         end
       end
      
